@@ -1,0 +1,51 @@
+#!/bin/bash
+#This script is ugly as well but works
+
+if [ "$#" -ne 3 ]; then
+    echo "usage ./cmd target-rootfs path-to-target-toolchain-compiler toolchain-vendor-prefix"
+    exit -1
+fi
+
+if [ $EUID != 0 ]; then
+    sudo "$0" "$@"
+    exit $?
+fi
+
+#passed args
+ROOTFS=$1
+TOOLCHAIN=$2
+VENDOR_PREFIX=$3
+
+if [ -x ${TOOLCHAIN} ]; then
+    echo "Passed valid toolchain"
+    MACHINE=$(${TOOLCHAIN} -dumpmachine)
+    if [ -n "${VENDOR_PREFIX}" ]; then
+        echo "removing toolchain's vendor: ${VENDOR_PREFIX} from symlink path (${MACHINE})";
+        SYSROOT_MACHINE=$(echo "${MACHINE}" | sed -e "s/${VENDOR_PREFIX}-//");
+    else
+        echo "no toolchain's vendor specified";
+        exit -1
+    fi
+fi
+
+INITIAL_DIR=${PWD}
+
+TOOLCHAIN_DIR=$(dirname ${TOOLCHAIN})
+
+echo "toolchain dir: ${TOOLCHAIN_DIR}"
+
+function makeVendorSymlinks
+{
+    cd $1
+    find . -type d -name $2 | while read i;
+    echo "erm: ${i}"
+    PRE_PATH=$(dirname ${i})
+    do echo "${i} -> ${PRE_PATH}";
+    echo "ln -s ${PRE_PATH}/${MACHINE} ${SYSROOT_MACHINE}";
+    done
+    cd ${INITIAL_DIR}
+}
+
+echo 'cp -r "${TOOLCHAIN_DIR}/../${MACHINE}/sysroot/*" "${ROOTFS}/"'
+
+makeVendorSymlinks "${ROOTFS}/" ${SYSROOT_MACHINE}
