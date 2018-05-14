@@ -1,5 +1,5 @@
 /* `fd_set' type and related macros, and `select'/`pselect' declarations.
-   Copyright (C) 1996-2017 Free Software Foundation, Inc.
+   Copyright (C) 1996-2016 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,11 +38,13 @@ typedef __sigset_t sigset_t;
 #endif
 
 /* Get definition of timer specification structures.  */
-#include <bits/types/time_t.h>
-#include <bits/types/struct_timeval.h>
+#define __need_time_t
 #ifdef __USE_XOPEN2K
-# include <bits/types/struct_timespec.h>
+# define __need_timespec
 #endif
+#include <time.h>
+#define __need_timeval
+#include <bits/time.h>
 
 #ifndef __suseconds_t_defined
 typedef __suseconds_t suseconds_t;
