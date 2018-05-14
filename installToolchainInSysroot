@@ -38,14 +38,15 @@ function makeVendorSymlinks
 {
     cd $1
     find . -type d -name $2 | while read i;
-    echo "erm: ${i}"
-    PRE_PATH=$(dirname ${i})
-    do echo "${i} -> ${PRE_PATH}";
-    echo "ln -s ${PRE_PATH}/${MACHINE} ${SYSROOT_MACHINE}";
+    do
+    echo "erm: ${i}";
+    PRE_PATH=$(dirname ${i});
+    echo "${i} -> ${PRE_PATH}/${MACHINE}";
+    ln -s ${SYSROOT_MACHINE} ${PRE_PATH}/${MACHINE};
     done
     cd ${INITIAL_DIR}
 }
 
-echo 'cp -r "${TOOLCHAIN_DIR}/../${MACHINE}/sysroot/*" "${ROOTFS}/"'
+cp -rv ${TOOLCHAIN_DIR}/../${MACHINE}/sysroot/* ${ROOTFS}/
 
 makeVendorSymlinks "${ROOTFS}/" ${SYSROOT_MACHINE}
