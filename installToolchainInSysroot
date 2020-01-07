@@ -1,8 +1,8 @@
 #!/bin/bash
 #This script is ugly as well but works
 
-if [ "$#" -ne 3 ]; then
-    echo "usage ./cmd target-rootfs path-to-target-toolchain-compiler toolchain-vendor-prefix"
+if [ "$#" -ne 2 ]; then
+    echo "usage ./cmd target-rootfs path-to-target-toolchain-compiler [toolchain-vendor-prefix]"
     exit -1
 fi
 
@@ -24,7 +24,7 @@ if [ -x ${TOOLCHAIN} ]; then
         SYSROOT_MACHINE=$(echo "${MACHINE}" | sed -e "s/${VENDOR_PREFIX}-//");
     else
         echo "no toolchain's vendor specified";
-        exit -1
+        SYSROOT_MACHINE=${MACHINE};
     fi
 fi
 
