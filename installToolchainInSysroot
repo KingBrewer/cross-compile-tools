@@ -42,7 +42,7 @@ function makeVendorSymlinks
     echo "erm: ${i}";
     PRE_PATH=$(dirname ${i});
     echo "${i} -> ${PRE_PATH}/${MACHINE}";
-    ln -s ${SYSROOT_MACHINE} ${PRE_PATH}/${MACHINE};
+    ln -sf ${SYSROOT_MACHINE} ${PRE_PATH}/${MACHINE};
     done
     cd ${INITIAL_DIR}
 }
