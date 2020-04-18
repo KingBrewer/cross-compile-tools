@@ -47,6 +47,6 @@ function makeVendorSymlinks
     cd ${INITIAL_DIR}
 }
 
-cp -rv ${TOOLCHAIN_DIR}/../${MACHINE}/sysroot/* ${ROOTFS}/
+rsync -K -a -v ${TOOLCHAIN_DIR}/../${MACHINE}/sysroot/* ${ROOTFS}/
 
 makeVendorSymlinks "${ROOTFS}/" ${SYSROOT_MACHINE}
